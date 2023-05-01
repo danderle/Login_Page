@@ -6,16 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Website</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mainStyle.css" type="text/css">
+    <link rel="stylesheet" href="registerStyle.css">
+    <link rel="stylesheet" href="loginStyle.css">
+    <link rel="stylesheet" href="editStyle.css">
 </head>
 <body>
     <header>
         <h1>Welcome to Space</h1>
         <nav class="navigation">
             <a href="#">Home</a>
-            <i class="fa fa-address-book" aria-hidden="true"></i>
             <button class="btnLogin-popup">Login</button>
         </nav>
+        <link rel="shortcut icon" href="">
     </header>
 
     <div class="wrapper">
@@ -27,19 +30,19 @@
             <h2>Login</h2>
             <form action="#">
                 <div class="input-box">
-                    <input type="text" required>
+                    <input class="loginEmailInput" type="text">
                     <label>Email</label>
+                    <label class="emailPasswordErrorLogin">Email or password is invalid!</label>
+                    <label class="invalidEmailLogin">Email is invalid</label>
                 </div>
                 <div class="input-box">
-                    <input type="password" required>
+                    <input class="loginPasswordInput" type="password">
                     <label>Password</label>
                 </div>
                 <div class="remember-forgot">
-                    <label><input type="checkbox">
-                        Remember me</label>
                     <a href="#">Forgot Password</a>
                 </div>
-                <button type="submit" class="btnLogin">Login</button>
+                <button type="submit" class="btnLogin" disabled>Login</button>
                 <div class="login-register">
                     <p>Dont have an account?<a class="register-link" href="#">Register</a></p>
                 </div>
@@ -50,27 +53,47 @@
             <h2>Registeration</h2>
             <form action="#">
                 <div class="input-box">
-                    <input class="registerNameInput"  type="text" required>
+                    <input class="registerNameInput"  type="text">
                     <label>Username</label>
                 </div>
                 <div class="input-box">
-                    <input class="registerEmailInput" type="text" required>
+                    <input class="registerEmailInput" type="text">
                     <label>Email</label>
                     <label class="emailExists">Email already exists!</label>
-                    <label class="invalidEmail">Email is invalid</label>
+                    <label class="invalidEmailRegister">Email is invalid</label>
                 </div>
                 <div class="input-box">
-                    <input class="registerPasswordInput" type="password" required>
+                    <input class="registerPasswordInput" type="password">
                     <label>Password</label>
+                    <label class="invalidPasswordRegister">Must be >= 8, 1 number and 1 special char.</label>
                 </div>
-                <div class="remember-forgot">
-                    <label><input type="checkbox">
-                        I agree to the terms & conditions</label>
-                </div>
-                <button type="submit" class="btnRegister">Register</button>
+                <button type="submit" class="btnRegister" disabled>Register</button>
                 <div class="login-register">
                     <p>Already have an acoount?<a class="login-link" href="#">Login</a></p>
                 </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="editwrapper">
+        <div class="form-box edit">
+            <h2>Profile</h2>
+            <form action="#">
+                <div class="input-box">
+                    <input class="editNameInput"  type="text" >
+                    <label>Username</label>
+                </div>
+                <div class="input-box">
+                    <input class="editEmailInput" type="text" >
+                    <label>Email</label>
+                    <label class="invalidEmailEdit">Email is invalid</label>
+                </div>
+                <div class="input-box">
+                    <input class="editPasswordInput" type="password">
+                    <label>Password</label>
+                    <label class="invalidPasswordEdit">Must be >= 8, 1 number and 1 special char.</label>
+                </div>
+                <button type="submit" class="btnSave" disabled>Save</button>
             </form>
         </div>
     </div>
@@ -79,6 +102,7 @@
 
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="uiScript.js"></script>
-<script src="loginScript.js"></script>
-<script src="registerScript.js"></script>
+<script src="./Scripts/uiScript.js"></script>
+<script src="./Scripts/loginScript.js"></script>
+<script src="./Scripts/registerScript.js"></script>
+<script src="./Scripts/editScript.js"></script>

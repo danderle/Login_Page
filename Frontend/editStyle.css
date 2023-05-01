@@ -1,0 +1,50 @@
+.editwrapper{
+    position: absolute;
+    width: 70%;
+    height: 50%;
+    min-height: 350px;
+    background-color: transparent;
+    border: 3px solid rgba(255, 255, 255, .5);
+    border-radius: 8px;
+    backdrop-filter: blur(50px);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: height .5s ease;
+    transform: scale(0);
+}
+
+.editwrapper.active{
+    transform: scale(1);
+}
+
+.editwrapper .form-box{
+    width: 50%;
+}
+
+.input-box .invalidPasswordEdit,
+.input-box .invalidEmailEdit{
+    color: transparent;
+    margin-left: 80px;
+    transition: .2s;
+}
+
+.input-box .invalidEmailEdit.active,
+.input-box .invalidPasswordEdit.active{
+    color: red;
+}
+
+.btnSave{
+    width: 60%;
+    height: 45px;
+    color: black;
+    font-size: 1.2em;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-weight: 600;
+    display: block;
+    margin: 0 auto;
+}

@@ -1,0 +1,53 @@
+.wrapper.active .form-box.register{
+    transition: none;
+    transition: transform .2s ease;
+    transform: translateX(0);
+}
+
+.form-box.register{
+    position: absolute;
+    transform: translateX(400px);
+}
+
+.input-box .emailExists,
+.input-box .invalidEmailRegister,
+.input-box .invalidPasswordRegister{
+    color: transparent;
+    margin-left: 70px;
+    transition: .2s;
+}
+
+.input-box .emailExists.active,
+.input-box .invalidEmailRegister.active,
+.input-box .invalidPasswordRegister.active{
+    color: red;
+}
+
+.btnRegister{
+    width: 100%;
+    height: 45px;
+    color: black;
+    font-size: 1.2em;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-weight: 600;
+}
+
+.login-register{
+    font-size: 1em;
+    color: black;
+    text-align: center;
+    font-weight: 500;
+    margin: 10px;
+}
+
+.login-register p a{
+    text-decoration: none;
+    color: black;
+    margin: 10px;
+}
+.login-register p a:hover{
+    font-weight: 600;
+    text-decoration: underline;
+}

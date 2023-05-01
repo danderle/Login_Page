@@ -1,8 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const User = require("./userModel.js");
 const cors = require("cors");
 const app = express();
+const jwt = require("jsonwebtoken");
 
 const errorHandler = (error, request, response, next) => {
     // Error handling middleware functionality
@@ -29,24 +31,68 @@ app.get("/users", async(req, res) => {
     }
 });
 
-app.post("/findUser", async(req, res) => {
+app.post("/userexists", async(req, res) => {
     try{
-        console.log("find user call");
+        console.log("user exist check");
         console.log(req.body);
-        const user = await User.find(req.body);
-        console.log(user);
-        res.status(200).json(user);
+        const users = await User.find(req.body);
+        console.log(users);
+        if(!users.length){
+            console.log("empty");
+            res.status(200).json(false);
+        } else {
+            console.log(true);
+            res.status(200).json(true);
+        }
     }catch(error){
         res.status(500).json({message: error.message});
     }
 });
 
-app.put("/users/update", async(req, res) => {
+app.post("/username", async(req, res) => {
+    try{
+        console.log("get user name");
+        console.log(req.body);
+        const users = await User.find(req.body);
+        console.log(users);
+        var result = users.length == 1;
+        if(result){
+            res.status(200).json(users[0].name);
+        } else {
+            res.status(404).json("User not found");
+        }
+    }catch(error){
+        res.status(500).json({message: error.message});
+    }
+});
+
+app.post("/login", async(req, res) => {
+    try{
+        console.log("login");
+        console.log(req.body);
+        const users = await User.find(req.body);
+        console.log(users);
+        var result = users.length == 1;
+        if(result){
+            const username = req.body.name;
+            const user = {name: username};
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+            res.status(200).json({ name: user, token: token});
+        } else {
+            res.status(404).json("User not found");
+        }
+    }catch(error){
+        res.status(500).json({message: error.message});
+    }
+});
+
+
+app.put("/usersupdate", authenticateToken, async(req, res) => {
     try{
         console.log(req.body);
         const user = await User.findOneAndUpdate(req.body[0], { $set: req.body[1]});
         console.log(user);
-        res.status(200).json(user);
+        res.status(200).json(true);
     }catch(error){
         res.status(500).json({message: error.message});
     }
@@ -56,9 +102,14 @@ app.put("/users/update", async(req, res) => {
 app.post("/users", async(req, res) => {
     try{
         console.log("create user");
-        console.log(req.body);
         const user = await User.create(req.body);
-        res.status(200).json(user);
+        console.log(user);
+        if(user){
+            res.status(200).json(true);
+        } else {
+            res.status(404).json("User not created");
+        }
+
     } catch(error){
         console.log(error.message),
         res.status(500).json({message: error.message});
@@ -85,3 +136,20 @@ mongoose.connect("mongodb+srv://admin:spacesecret@spaceusersdb.2ysuhsk.mongodb.n
 }).catch((error) => {
     console.log(error);
 });
+
+function authenticateToken(req, res, next){
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    console.log("token check");
+    if(token == null){
+        return res.sendStatus(401).json("Not Authorized");
+    } else {
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+            if(err) {
+                return res.sendStatus(403).json("Not Authorized");
+            }
+            req.user = user;
+            next();
+        });
+    }
+}
