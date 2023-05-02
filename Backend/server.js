@@ -1,11 +1,10 @@
+const hasher = require('./hashGenerator.js');
 const express = require("express");
-// import express from 'express';
 const mongoose = require("mongoose");
 const User = require("./userModel.js");
 const cors = require("cors");
 const app = express();
 
-// import { getUser } from 
 const errorHandler = (error, request, response, next) => {
     // Error handling middleware functionality
     console.log( `error ${error.message}`) // log the error
@@ -19,21 +18,23 @@ app.use(express.json());
 app.use(errorHandler);
 app.use(cors()); // kann eingegrenzt werden auf bestimmte urls
 
-
-//routes
-app.get("/users", async(req, res) => {
-    try{
-        const users = await User.find({});
-        res.status(200).json(users);
-    }catch(error){
-        res.status(500).json({message: error.message});
-    }
+//connect to database
+mongoose.connect("mongodb+srv://admin:spacesecret@spaceusersdb.2ysuhsk.mongodb.net/Node-API?retryWrites=true&w=majority")
+.then(() => {
+    console.log("Connected to MongoDB");
+    app.listen(5050, () => {
+        console.log("Node API app is running on port 5050");
+    });
+}).catch((error) => {
+    console.log(error);
 });
 
-app.post("/userexists", async(req, res) => {
+
+//routes
+app.post("/userexists", async (req, res) => {
     try{
-        const users = await User.find(req.body);
-        if(!users.length){
+        const user = await User.findOne(req.body);
+        if(!user){
             res.status(200).json(false);
         } else {
             res.status(200).json(true);
@@ -45,10 +46,9 @@ app.post("/userexists", async(req, res) => {
 
 app.post("/username", async(req, res) => {
     try{
-        const users = await User.find(req.body);
-        const result = users.length === 1;
-        if(result){
-            res.status(200).json(users[0].name);
+        const user = await User.findOne(req.body);
+        if(user){
+            res.status(200).json(user.name);
         } else {
             res.status(404).json("User not found");
         }
@@ -59,8 +59,10 @@ app.post("/username", async(req, res) => {
 
 app.post("/register", async(req, res) => {
     try{
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const hashedPassword = await hasher.hash(req.body.password);
+        console.log(hashedPassword);
         const newUser = { name: req.body.name, email: req.body.email, password: hashedPassword};
+        console.log(newUser);
         const user = await User.create(newUser);
         if(user){
             res.status(200).json(true);
@@ -73,6 +75,7 @@ app.post("/register", async(req, res) => {
     }
 });
 
+//only for testing
 app.delete("/deleteAll", async(req, res) => {
     try{
         const user = await User.deleteMany({});
@@ -82,12 +85,12 @@ app.delete("/deleteAll", async(req, res) => {
     }
 });
 
-mongoose.connect("mongodb+srv://admin:spacesecret@spaceusersdb.2ysuhsk.mongodb.net/Node-API?retryWrites=true&w=majority")
-.then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(5050, () => {
-        console.log("Node API app is running on port 5050");
-    });
-}).catch((error) => {
-    console.log(error);
+//only for testing
+app.get("/users", async(req, res) => {
+    try{
+        const users = await User.find({});
+        res.status(200).json(users);
+    }catch(error){
+        res.status(500).json({message: error.message});
+    }
 });

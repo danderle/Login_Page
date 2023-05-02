@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node server.js",
-    "authServer": "node authServer.js",
     "dev": "odemon server.js",
-    "devAuth": "nodemon authServer.js"
+    "devAuth": "nodemon authServer.js",
+    "devEmail": "nodemon emailServer.js"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +19,8 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.1.0"
+    "mongoose": "^7.1.0",
+    "nodemailer": "^6.9.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

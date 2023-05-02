@@ -75,10 +75,13 @@ async function checkEmailAndPassword(){
     await axios.post(authServerUrl + "/login", obj)
     .then(function (response) {
       // handle success
-        window.sessionStorage.setItem("email", loginEmailInput.value);
-        window.sessionStorage.setItem("token", response.data.token);
-        window.sessionStorage.setItem("name", response.data.name);
-        exists = true;
+      if(response.data.token){
+          window.sessionStorage.setItem("email", loginEmailInput.value);
+          window.sessionStorage.setItem("token", response.data.token);
+          window.sessionStorage.setItem("name", response.data.name);
+          window.localStorage.clear();
+          exists = true;
+      }
     })
     .catch(function (error) {
       // handle error

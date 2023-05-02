@@ -1,10 +1,9 @@
 require("dotenv").config();
+const hasher = require('./hashGenerator.js');
 const express = require("express");
-// import express from 'express';
 const mongoose = require("mongoose");
 const User = require("./userModel.js");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
 const app = express();
 const jwt = require("jsonwebtoken");
 
@@ -23,16 +22,18 @@ app.use(cors()); // kann eingegrenzt werden auf bestimmte urls
 
 app.post("/login", async(req, res) => {
     try{
-        const users = await User.find({email: req.body.email});
-        const result = users.length === 1;
-        if(result){
-            if(await bcrypt.compare(req.body.password, users[0].password)){
-                const username = users[0].name;
+        const foundUser = await User.findOne({email: req.body.email});
+        console.log(foundUser);
+        if(foundUser){
+            if(await hasher.compare(req.body.password, foundUser.password)){
+                const username = foundUser.name;
                 const user = {name: username};
                 const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
                 res.status(200).json({ name: username, token: token});
+                console.log("right");
             } else{
-                res.status(200).json("wrong password");    
+                console.log("wrong");
+                res.status(201).json("wrong password");    
             }
         } else {
             res.status(404).json("User not found");
@@ -46,7 +47,7 @@ app.post("/login", async(req, res) => {
 app.put("/usersupdate", authenticateToken, async (req, res) => {
     try{
         if(req.body.password){
-            const hashedPassword = await bcrypt.hash(req.body[1].password, 10);
+            const hashedPassword = await hasher.hash(req.body[1].password, 10);
             const userUpdate = {name: req.body[1].name, email: req.body[1].email, password: hashedPassword }
             const user = await User.findOneAndUpdate(req.body[0], { $set: userUpdate});
 

@@ -14,6 +14,11 @@ const userSchema = mongoose.Schema(
             type: String,
             required: [true, "Enter a password"]
         },
+        resetToken: {
+            type: String,
+            default: "",
+            required: [false, "Only for password reset"]
+        }
     },
     {
         timestamps: true

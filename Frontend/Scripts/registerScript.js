@@ -28,6 +28,8 @@ btnRegister.addEventListener("click", async (event) => {
             else{
                 registerNewUser();
                 clearRegisterInputs();
+                document.querySelector(".wrapper").classList.remove("active");
+                alert("Please login");
             }
         } else {
             alert("Invalid password. Must be at least length 8, 1 number and 1 special character");
@@ -69,9 +71,6 @@ function registerNewUser(){
       // handle success
       if(response.status != 200){
         alert("response status code " + response.status);
-      }
-      else{
-        alert("Please login");
       }
     })
     .catch(function (error) {
