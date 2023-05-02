@@ -1,4 +1,5 @@
 const serverUrl = "http://localhost:5050";
+const authServerUrl = "http://localhost:5555";
 
 const closeBtn = document.querySelector(".closeBtn");
 

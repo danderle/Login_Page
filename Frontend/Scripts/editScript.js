@@ -14,11 +14,12 @@ const invalidEmailEdit = document.querySelector(".invalidEmailEdit");
 const invalidPasswordEdit = document.querySelector(".invalidPasswordEdit");
 
 window.onload = () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
+    console.log(sessionStorage);
     if(token){
 
-        editEmailInput.placeholder = localStorage.getItem("email");
-        editNameInput.placeholder = localStorage.getItem("name");
+        editEmailInput.placeholder = sessionStorage.getItem("email");
+        editNameInput.placeholder = sessionStorage.getItem("name");
         btnLogout.classList.remove("deactive");
         editWrapper.classList.add("active");
     }
@@ -29,13 +30,14 @@ window.onload = () => {
 
 
 btnLogout.addEventListener("click", () => {
-    localStorage.clear();
+    sessionStorage.clear();
     btnLogout.classList.add("deactive");
     window.location.href = "./";
 });
 
 
-btnSave.addEventListener("click", () => {
+btnSave.addEventListener("click", (event) => {
+    event.preventDefault();
     const oldname = editNameInput.placeholder;
     const oldemail = editEmailInput.placeholder;
     const old = {name: oldname, email: oldemail};
@@ -85,10 +87,10 @@ function enableSaveButton(){
 
 async function saveUserData(old){
     const obj = getNameAndEmailObject();
-    const bearer = "Bearer " + localStorage.getItem("token");
+    const bearer = "Bearer " + sessionStorage.getItem("token");
     console.log(bearer);
     const config = { headers: { Authorization: bearer}}
-    await axios.put(serverUrl + "/usersupdate", [old, obj], config )
+    await axios.put(authServerUrl + "/usersupdate", [old, obj], config )
     .then(function (response) {
       // handle success
         console.log(response.data);

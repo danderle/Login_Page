@@ -72,12 +72,12 @@ function enableLoginButton(){
 async function checkEmailAndPassword(){
     const obj = getLoginEmailAndPasswordObject();
     let exists = false;
-    await axios.post(serverUrl + "/login", obj)
+    await axios.post(authServerUrl + "/login", obj)
     .then(function (response) {
       // handle success
-        window.localStorage.setItem("email", loginEmailInput.value);
-        window.localStorage.setItem("token", response.data.token);
-        window.localStorage.setItem("name", response.data.name);
+        window.sessionStorage.setItem("email", loginEmailInput.value);
+        window.sessionStorage.setItem("token", response.data.token);
+        window.sessionStorage.setItem("name", response.data.name);
         exists = true;
     })
     .catch(function (error) {
