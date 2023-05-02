@@ -89,7 +89,7 @@ function createMessage(user, hash){
         from: "emailServer@email.com",
         to: user.email,
         subject: "Password reset",
-        html: `<di><h1>Password reset</h1><p>Please click this <a href="http://127.0.0.1:5500/Frontend/resetpassword.html/">link</a> to reset password</p>${hash}</di>`
+        html: `<di><h1>Password reset</h1><p>Copy the token to reset the password</p>${hash}</di>`
     }
 
     return message;
