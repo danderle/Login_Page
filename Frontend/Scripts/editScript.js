@@ -88,7 +88,7 @@ async function saveUserData(old){
     const bearer = "Bearer " + localStorage.getItem("token");
     console.log(bearer);
     const config = { headers: { Authorization: bearer}}
-    await axios.put('http://localhost:5050/usersupdate', [old, obj], config )
+    await axios.put(serverUrl + "/usersupdate", [old, obj], config )
     .then(function (response) {
       // handle success
         console.log(response.data);

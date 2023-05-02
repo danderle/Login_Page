@@ -72,7 +72,7 @@ function enableLoginButton(){
 async function checkEmailAndPassword(){
     const obj = getLoginEmailAndPasswordObject();
     let exists = false;
-    await axios.post('http://localhost:5050/login', obj)
+    await axios.post(serverUrl + "/login", obj)
     .then(function (response) {
       // handle success
         window.localStorage.setItem("email", loginEmailInput.value);

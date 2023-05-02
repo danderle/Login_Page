@@ -64,7 +64,7 @@ function enableRegisterButton(){
 
 function registerNewUser(){
     const obj = getRegistrationObject();
-    axios.post('http://localhost:5050/register', obj)
+    axios.post(serverUrl + "/register", obj)
     .then(function (response) {
       // handle success
       if(response.status != 200){
@@ -97,7 +97,7 @@ function getRegisterEmailObject(){
 async function checkIfEmailExists(){
     const obj = getRegisterEmailObject();
     let exists = true;
-    await axios.post('http://localhost:5050/userexists', obj)
+    await axios.post(serverUrl + "/userexists", obj)
     .then(function (response) {
       // handle success
       if(response.status != 200){

@@ -1,4 +1,7 @@
+const serverUrl = "http://localhost:5050";
+
 const closeBtn = document.querySelector(".closeBtn");
+
 if(closeBtn){
     closeBtn.addEventListener("click", () => {
         document.querySelector(".wrapper").classList.remove("active-popup");
