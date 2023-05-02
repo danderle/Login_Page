@@ -20,6 +20,17 @@ app.use(express.json());
 app.use(errorHandler);
 app.use(cors()); // kann eingegrenzt werden auf bestimmte urls
 
+mongoose.connect("mongodb+srv://admin:spacesecret@spaceusersdb.2ysuhsk.mongodb.net/Node-API?retryWrites=true&w=majority")
+.then(() => {
+    console.log("Connected to MongoDB");
+    app.listen(5555, () => {
+        console.log("Node authentication API app is running on port 5555");
+    });
+}).catch((error) => {
+    console.log(error);
+});
+
+//routes
 app.post("/login", async(req, res) => {
     try{
         const foundUser = await User.findOne({email: req.body.email});
@@ -43,10 +54,9 @@ app.post("/login", async(req, res) => {
     }
 });
 
-
 app.put("/usersupdate", authenticateToken, async (req, res) => {
     try{
-        if(req.body.password){
+        if(req.body[1].password){
             const hashedPassword = await hasher.hash(req.body[1].password, 10);
             const userUpdate = {name: req.body[1].name, email: req.body[1].email, password: hashedPassword }
             const user = await User.findOneAndUpdate(req.body[0], { $set: userUpdate});
@@ -59,16 +69,6 @@ app.put("/usersupdate", authenticateToken, async (req, res) => {
     }catch(error){
         res.status(500).json({message: error.message});
     }
-});
-
-mongoose.connect("mongodb+srv://admin:spacesecret@spaceusersdb.2ysuhsk.mongodb.net/Node-API?retryWrites=true&w=majority")
-.then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(5555, () => {
-        console.log("Node authentication API app is running on port 5555");
-    });
-}).catch((error) => {
-    console.log(error);
 });
 
 function authenticateToken(req, res, next){

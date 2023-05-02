@@ -6,7 +6,6 @@ const cors = require("cors");
 const nodemailer = require('nodemailer');
 const app = express();
 
-
 const errorHandler = (error, request, response, next) => {
     // Error handling middleware functionality
     console.log( `error ${error.message}`) // log the error
@@ -33,7 +32,7 @@ mongoose.connect("mongodb+srv://admin:spacesecret@spaceusersdb.2ysuhsk.mongodb.n
 });
 
 
-let transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     host: "sandbox.smtp.mailtrap.io",
     port: 2525,
     auth: {
@@ -42,6 +41,7 @@ let transporter = nodemailer.createTransport({
     }
 })
 
+//routes
 app.put("/passwordresetmail", async (req, res) => {
     try{
         const hashedemail = await hasher.hash(req.body.email, 10);
