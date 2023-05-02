@@ -15,7 +15,6 @@
     <header>
         <h1>Welcome to Space</h1>
         <nav class="navigation">
-            <a href="#">Home</a>
             <button class="btnLogin-popup">Login</button>
         </nav>
         <link rel="shortcut icon" href="">
@@ -67,33 +66,10 @@
                     <label>Password</label>
                     <label class="invalidPasswordRegister">Must be >= 8, 1 number and 1 special char.</label>
                 </div>
-                <button type="submit" class="btnRegister" disabled>Register</button>
+                <button class="btnRegister" disabled>Register</button>
                 <div class="login-register">
                     <p>Already have an acoount?<a class="login-link" href="#">Login</a></p>
                 </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="editwrapper">
-        <div class="form-box edit">
-            <h2>Profile</h2>
-            <form action="#">
-                <div class="input-box">
-                    <input class="editNameInput"  type="text" >
-                    <label>Username</label>
-                </div>
-                <div class="input-box">
-                    <input class="editEmailInput" type="text" >
-                    <label>Email</label>
-                    <label class="invalidEmailEdit">Email is invalid</label>
-                </div>
-                <div class="input-box">
-                    <input class="editPasswordInput" type="password">
-                    <label>Password</label>
-                    <label class="invalidPasswordEdit">Must be >= 8, 1 number and 1 special char.</label>
-                </div>
-                <button type="submit" class="btnSave" disabled>Save</button>
             </form>
         </div>
     </div>
@@ -101,8 +77,7 @@
 </html>
 
 
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="./Scripts/uiScript.js"></script>
+<script src="https://unpkg.com/axios@1.4.0/dist/axios.min.js"></script>
+<script src="./Scripts/uiGlobalScript.js"></script>
 <script src="./Scripts/loginScript.js"></script>
 <script src="./Scripts/registerScript.js"></script>
-<script src="./Scripts/editScript.js"></script>

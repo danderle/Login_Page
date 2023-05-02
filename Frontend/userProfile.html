@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Website</title>
+
+    <link rel="stylesheet" href="mainStyle.css" type="text/css">
+    <link rel="stylesheet" href="registerStyle.css">
+    <link rel="stylesheet" href="loginStyle.css">
+    <link rel="stylesheet" href="editStyle.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Space</h1>
+        <nav class="navigation">
+                <button class="btnLogout">Logout</button>
+        </nav>
+        <link rel="shortcut icon" href="">
+    </header>
+
+    <div class="editwrapper">
+        <div class="form-box edit">
+            <h1 class="h1Profile">You have entered space</h1>
+            <h2>Edit profile</h2>
+            <form action="#">
+                <div class="input-box">
+                    <input class="editNameInput"  type="text" >
+                    <label>Username</label>
+                </div>
+                <div class="input-box">
+                    <input class="editEmailInput" type="text" >
+                    <label>Email</label>
+                    <label class="invalidEmailEdit">Email is invalid</label>
+                </div>
+                <div class="input-box">
+                    <input class="editPasswordInput" type="password">
+                    <label>New Password</label>
+                    <label class="invalidPasswordEdit">Must be >= 8, 1 number and 1 special char.</label>
+                </div>
+                <button type="submit" class="btnSave" disabled>Save</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+
+<script src="https://unpkg.com/axios@1.4.0/dist/axios.min.js"></script>
+<script src="./Scripts/uiGlobalScript.js"></script>
+<script src="./Scripts/editScript.js"></script>

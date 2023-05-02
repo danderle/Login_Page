@@ -1,11 +1,13 @@
 require("dotenv").config();
 const express = require("express");
+// import express from 'express';
 const mongoose = require("mongoose");
 const User = require("./userModel.js");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
 const app = express();
 const jwt = require("jsonwebtoken");
-
+// import { getUser } from 
 const errorHandler = (error, request, response, next) => {
     // Error handling middleware functionality
     console.log( `error ${error.message}`) // log the error
@@ -17,7 +19,7 @@ const errorHandler = (error, request, response, next) => {
 //middleware json
 app.use(express.json());
 app.use(errorHandler);
-app.use(cors());
+app.use(cors()); // kann eingegrenzt werden auf bestimmte urls
 
 //routes
 app.get("/users", async(req, res) => {
@@ -55,7 +57,7 @@ app.post("/username", async(req, res) => {
         console.log(req.body);
         const users = await User.find(req.body);
         console.log(users);
-        var result = users.length == 1;
+        const result = users.length === 1;
         if(result){
             res.status(200).json(users[0].name);
         } else {
@@ -70,14 +72,21 @@ app.post("/login", async(req, res) => {
     try{
         console.log("login");
         console.log(req.body);
-        const users = await User.find(req.body);
+
+        const users = await User.find({email: req.body.email});
         console.log(users);
-        var result = users.length == 1;
+        const result = users.length === 1;
         if(result){
-            const username = req.body.name;
-            const user = {name: username};
-            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-            res.status(200).json({ name: user, token: token});
+            if(await bcrypt.compare(req.body.password, users[0].password)){
+                const username = users[0].name;
+                console.log(username);
+                const user = {name: username};
+                console.log(user);
+                const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+                res.status(200).json({ name: username, token: token});
+            } else{
+                res.status(200).json("wrong password");    
+            }
         } else {
             res.status(404).json("User not found");
         }
@@ -87,11 +96,20 @@ app.post("/login", async(req, res) => {
 });
 
 
-app.put("/usersupdate", authenticateToken, async(req, res) => {
+app.put("/usersupdate", authenticateToken, async (req, res) => {
     try{
+        console.log("user update");
         console.log(req.body);
-        const user = await User.findOneAndUpdate(req.body[0], { $set: req.body[1]});
-        console.log(user);
+        if(req.body.password){
+            const hashedPassword = await bcrypt.hash(req.body[1].password, 10);
+            console.log(hashedPassword);
+            const userUpdate = {name: req.body[1].name, email: req.body[1].email, password: hashedPassword }
+            const user = await User.findOneAndUpdate(req.body[0], { $set: userUpdate});
+
+        }else {
+            const userUpdate = {name: req.body[1].name, email: req.body[1].email }
+            const user = await User.findOneAndUpdate(req.body[0], { $set: userUpdate});
+        }
         res.status(200).json(true);
     }catch(error){
         res.status(500).json({message: error.message});
@@ -99,15 +117,18 @@ app.put("/usersupdate", authenticateToken, async(req, res) => {
 });
 
 
-app.post("/users", async(req, res) => {
+app.post("/register", async(req, res) => {
     try{
-        console.log("create user");
-        const user = await User.create(req.body);
+        console.log("register user");
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        console.log(hashedPassword);
+        const newUser = { name: req.body.name, email: req.body.email, password: hashedPassword};
+        const user = await User.create(newUser);
         console.log(user);
         if(user){
             res.status(200).json(true);
         } else {
-            res.status(404).json("User not created");
+            res.status(404).json("User not registered");
         }
 
     } catch(error){
@@ -141,7 +162,7 @@ function authenticateToken(req, res, next){
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     console.log("token check");
-    if(token == null){
+    if(!token){
         return res.sendStatus(401).json("Not Authorized");
     } else {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
@@ -149,6 +170,7 @@ function authenticateToken(req, res, next){
                 return res.sendStatus(403).json("Not Authorized");
             }
             req.user = user;
+            console.log("token verified");
             next();
         });
     }

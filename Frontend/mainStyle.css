@@ -23,7 +23,7 @@ body{
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('space.jpg') no-repeat;
+    background: url("./Images/space.jpg") no-repeat;
     background-position: center;
     background-size: cover;
 }
@@ -88,7 +88,8 @@ body{
     padding: 40px;
 }
 
-.form-box h2{
+.form-box h2,
+.form-box h1{
     font-size: 2em;
     color: white;
     text-align: center;

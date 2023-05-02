@@ -1,20 +1,27 @@
+const wrapper = document.querySelector(".wrapper");
+
 //Buttons
 const loginLink = document.querySelector(".login-link");
-const btnLoginPopup = document.querySelector(".btnLogin-popup");
 const loginBtn = document.querySelector(".btnLogin");
+const btnLoginPopup = document.querySelector(".btnLogin-popup");
 
 //Inputs
 const loginEmailInput = document.querySelector(".loginEmailInput");
 const loginPasswordInput = document.querySelector(".loginPasswordInput");
 
+//Labels
+const invalidEmailLogin = document.querySelector(".invalidEmailLogin");
+const emailPasswordErrorLogin = document.querySelector(".emailPasswordErrorLogin");
+
+
 loginEmailInput.addEventListener("input", () => {
     emailPasswordErrorLogin.classList.remove("active");
     invalidEmailLogin.classList.remove("active");
-    EnableLoginButton();
+    enableLoginButton();
 });
 
 loginPasswordInput.addEventListener("input", () => {
-    EnableLoginButton();
+    enableLoginButton();
 });
 
 loginEmailInput.addEventListener("input", () => {
@@ -26,57 +33,52 @@ loginLink.addEventListener("click", () => {
     wrapper.classList.remove("active");
 });
 
-btnLoginPopup.addEventListener("click", () => {
+btnLoginPopup.addEventListener("click", async () => {
     wrapper.classList.add("active-popup");
-    ClearInputs();
+    clearLoginInputs();
 });
 
-closeBtn.addEventListener("click", () => {
-    wrapper.classList.remove("active-popup");
-});
+loginBtn.addEventListener("click", async (event) => {
+    event.preventDefault();
 
-
-loginBtn.addEventListener("click", async () => {
-    if(IsValidEmail(loginEmailInput.value)){
-        var val = await CheckEmailAndPassword();
-        if(!val){
+    if(isValidEmail(loginEmailInput.value)){
+        const result = await checkEmailAndPassword();
+        if(!result){
             emailPasswordErrorLogin.classList.add("active");
         }
         else{
             //logged in
-            editwrapper.classList.add("active");
-            ClearInputs();
+            clearLoginInputs();
+            btnLoginPopup.classList.add("deactive");
+            wrapper.classList.remove("active-popup");
+            window.location.href = "/Frontend/userProfile.html";
         }
     } else {
-        console.log("invalid email");
         invalidEmailLogin.classList.add("active");
     }
 });
 
 
-function EnableLoginButton(){
+function enableLoginButton(){
     if(loginEmailInput.value !== "" &&
         loginPasswordInput.value !== ""){
             loginBtn.disabled = false;
-            console.log("enabled");
         }
         else{
-            console.log("disabled");
             loginBtn.disabled = true;
         }
 }
 
-async function CheckEmailAndPassword(){
-    var obj = GetLoginEmailAndPasswordObject();
-    var exists = true;
+async function checkEmailAndPassword(){
+    const obj = getLoginEmailAndPasswordObject();
+    let exists = false;
     await axios.post('http://localhost:5050/login', obj)
     .then(function (response) {
       // handle success
-        console.log(response.data);
-        editEmailInput.placeholder = loginEmailInput.value;
-        editPasswordInput.value = loginPasswordInput.value;
-        editNameInput.placeholder = response.data.name;
+        window.localStorage.setItem("email", loginEmailInput.value);
         window.localStorage.setItem("token", response.data.token);
+        window.localStorage.setItem("name", response.data.name);
+        exists = true;
     })
     .catch(function (error) {
       // handle error
@@ -88,10 +90,14 @@ async function CheckEmailAndPassword(){
     return exists;
 }
 
-function GetLoginEmailAndPasswordObject(){
-    var obj = new Object();
+function getLoginEmailAndPasswordObject(){
+    const obj = new Object();
     obj.email = loginEmailInput.value;
     obj.password = loginPasswordInput.value;
-    console.log(obj);
     return obj;
+}
+
+function clearLoginInputs(){
+    loginEmailInput.value = "";
+    loginPasswordInput.value = "";
 }

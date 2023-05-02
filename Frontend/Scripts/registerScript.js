@@ -1,24 +1,33 @@
 //Buttons
 const registerLink = document.querySelector(".register-link");
+const btnRegister = document.querySelector(".btnRegister");
 
+//Register Inputs
+const registerNameInput = document.querySelector(".registerNameInput");
+const registerEmailInput = document.querySelector(".registerEmailInput");
+const registerPasswordInput = document.querySelector(".registerPasswordInput");
+
+//labels
+const emailExists = document.querySelector(".emailExists");
+const invalidEmailRegister = document.querySelector(".invalidEmailRegister");
+const invalidPasswordRegister = document.querySelector(".invalidPasswordRegister");
 
 registerLink.addEventListener("click", () => {
-    wrapper.classList.add("active");
-    console.log("register");
+    document.querySelector(".wrapper").classList.add("active");
 });
 
-btnRegister.addEventListener("click",async () => {
-    console.log("register");
-    if(IsValidEmail(registerEmailInput.value)){
-        if(IsValidPassword(registerPasswordInput.value)){
+btnRegister.addEventListener("click", async (event) => {
+    event.preventDefault();
 
-            var val = await CheckIfEmailExists();
+    if(isValidEmail(registerEmailInput.value)){
+        if(isValidPassword(registerPasswordInput.value)){
+            var val = await checkIfEmailExists();
             if(val){
                 emailExists.classList.add("active");
             }
             else{
-                RegisterNewUser();
-                ClearInputs();
+                registerNewUser();
+                clearRegisterInputs();
             }
         } else {
             alert("Invalid password. Must be at least length 8, 1 number and 1 special character");
@@ -29,38 +38,35 @@ btnRegister.addEventListener("click",async () => {
 });
 
 registerNameInput.addEventListener("input", () => {
-    EnableRegisterButton();
+    enableRegisterButton();
 });
 
 registerEmailInput.addEventListener("input", () => {
     emailExists.classList.remove("active");
     invalidEmailRegister.classList.remove("active");
-    EnableRegisterButton();
+    enableRegisterButton();
 });
 
 registerPasswordInput.addEventListener("input", () => {
-    EnableRegisterButton();
+    enableRegisterButton();
 });
 
-function EnableRegisterButton(){
+function enableRegisterButton(){
     if(registerNameInput.value !== "" &&
         registerEmailInput.value !== "" &&
         registerPasswordInput.value !== ""){
             btnRegister.disabled = false;
-            console.log("enabled");
         }
         else{
-            console.log("disabled");
             btnRegister.disabled = true;
         }
 }
 
-function RegisterNewUser(){
-    var obj = GetRegistrationObject();
-    axios.post('http://localhost:5050/users', obj)
+function registerNewUser(){
+    const obj = getRegistrationObject();
+    axios.post('http://localhost:5050/register', obj)
     .then(function (response) {
       // handle success
-      console.log(response);
       if(response.status != 200){
         alert("response status code " + response.status);
       }
@@ -70,30 +76,27 @@ function RegisterNewUser(){
     })
     .catch(function (error) {
       // handle error
-      console.log(error);
       alert(error);
     });
 }
 
-function GetRegistrationObject(){
-    var obj = new Object();
+function getRegistrationObject(){
+    const obj = new Object();
     obj.name = registerNameInput.value;
     obj.email = registerEmailInput.value;
     obj.password = registerPasswordInput.value;
-    console.log(obj);
     return obj;
 }
 
-function GetRegisterEmailObject(){
-    var obj = new Object();
+function getRegisterEmailObject(){
+    const obj = new Object();
     obj.email = registerEmailInput.value;
-    console.log(obj);
     return obj;
 }
 
-async function CheckIfEmailExists(){
-    var obj = GetRegisterEmailObject();
-    var exists = true;
+async function checkIfEmailExists(){
+    const obj = getRegisterEmailObject();
+    let exists = true;
     await axios.post('http://localhost:5050/userexists', obj)
     .then(function (response) {
       // handle success
@@ -101,15 +104,19 @@ async function CheckIfEmailExists(){
         alert("response status code " + response.status + response.data);
       }
       else{
-          exists = response.data;
+        exists = response.data;
       }
     })
     .catch(function (error) {
       // handle error
-      console.log("error")
-      console.log(error);
-    });
+      console.log(error.message);
+    }).finally();
 
-    console.log(exists);
     return exists;
+}
+
+function clearRegisterInputs(){
+    registerNameInput.value = "";
+    registerEmailInput.value = "";
+    registerPasswordInput.value = "";
 }
